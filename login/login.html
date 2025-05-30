@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Minoa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <style>
+    body {
+      height: 100vh;
+      background: linear-gradient(to right, #0d6efd, #6c63ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .form-control {
+      border-radius: 0.5rem;
+    }
+    .btn-primary {
+      border-radius: 0.5rem;
+      font-weight: bold;
+    }
+    .login-title {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card p-4">
+          <h3 class="text-center login-title mb-4">Accedi a <span class="text-primary">Minoa</span></h3>
+          <form id="loginForm">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="username" placeholder="Username" required>
+              <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="password" placeholder="Password" required>
+              <label for="password">Password</label>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <p id="error" class="text-danger text-center mt-3"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <script src="../login/login.js"></script>
+</body>
+</html>

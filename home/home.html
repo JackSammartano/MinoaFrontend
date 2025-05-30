@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Minoa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .sidebar {
+      width: 280px;
+      height: 100vh;
+      background-color: #f8f9fa;
+    }
+    .nav-link.active {
+      background-color: #0d6efd !important;
+      color: white !important;
+    }
+    .user-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #6c757d;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="flex-shrink-0 p-3 sidebar">
+    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+      <span class="fs-4">Minoa</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="#" class="nav-link active" onclick="loadDashboard()">Dashboard</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-dark" onclick="loadSquadra()">Squadra</a>
+      </li>
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <div id="userIcon" class="user-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></div>
+      <ul class="dropdown-menu text-small shadow dropdown-menu-end">
+        <li><a class="dropdown-item" href="#">Profilo</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="flex-grow-1 p-4">
+    <div id="mainContent">
+      <h1>Benvenuto!</h1>
+      <p>Questa è la tua area riservata.</p>
+    </div>
+  </div>
+</div>
+
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="../home/home.js"></script>
+</body>
+</html>
