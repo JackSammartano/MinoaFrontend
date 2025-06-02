@@ -1,0 +1,66 @@
+<div class="modal fade" id="waiterModal" tabindex="-1" aria-labelledby="waiterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="waiterForm" autocomplete="off">
+        <div class="modal-header">
+          <h5 class="modal-title" id="waiterModalLabel">Aggiungi Cameriere</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="waiterName" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="waiterName" required>
+          </div>
+          <div class="mb-3">
+            <label for="waiterSurname" class="form-label">Cognome</label>
+            <input type="text" class="form-control" id="waiterSurname" required>
+          </div>
+          <div class="mb-3">
+            <label for="waiterPhone" class="form-label">Telefono</label>
+            <input type="text" class="form-control" id="waiterPhone">
+          </div>
+          <div class="mb-3">
+            <label for="waiterEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="waiterEmail">
+          </div>
+          <div class="mb-3">
+            <label for="waiterPosition" class="form-label">Ordine</label>
+            <input type="number" class="form-control" id="waiterPosition">
+          </div>
+          <div class="mb-3">
+            <label for="waiterGroup" class="form-label">Gruppo</label>
+            <select id="waiterGroup" class="form-select" required>
+              <option value="MALE">Maschi</option>
+              <option value="FEMALE">Femmine</option>
+              <option value="SECONDARY">Secondari</option>
+            </select>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="waiterLatest" disabled>
+            <label class="form-check-label" for="waiterLatest">Ultimo a lavorare</label>
+          </div>
+<div class="mb-3">
+  <label for="waiterUser" class="form-label">Username</label>
+  <input type="text" class="form-control" id="waiterUser" name="waiterUser" autocomplete="off" required>
+</div>
+<div class="mb-3">
+  <label for="waiterPass" class="form-label">Password</label>
+  <input type="password" class="form-control" id="waiterPass" name="waiterPass" autocomplete="new-password" required>
+</div>
+
+<div class="mb-3">
+  <label for="waiterAccessLevel" class="form-label">Accesso</label>
+  <select class="form-select" id="waiterAccessLevel" required>
+    <option value="WAITER">Cameriere</option>
+  </select>
+</div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelWaiter" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Aggiungi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

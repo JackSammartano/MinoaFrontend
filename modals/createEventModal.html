@@ -1,0 +1,51 @@
+<div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="createEventForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createEventModalLabel">Crea Nuovo Evento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="eventName" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="eventName" required>
+          </div>
+          <div class="mb-3">
+            <label for="eventDate" class="form-label">Data</label>
+            <input type="date" class="form-control" id="eventDate" required>
+          </div>
+          <div class="mb-3">
+            <label for="eventType" class="form-label">Tipo Evento</label>
+            <select class="form-select" id="eventType" required>
+              <option value="MATRIMONIO">Matrimonio</option>
+              <option value="BANCHETTO">Banchetto</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="diners" class="form-label">Coperti</label>
+            <input type="number" class="form-control" id="diners" required>
+          </div>
+          <div class="mb-3">
+            <label for="mealType" class="form-label">Tipo Pasto</label>
+            <select class="form-select" id="mealType" required>
+              <option value="MATTINA">Mattina</option>
+              <option value="SERA">Sera</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="eventLocation" class="form-label">Location</label>
+            <select class="form-select" id="eventLocation" required>
+              <option value="MINOA">Minoa</option>
+              <option value="COLORADO">Colorado</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelCreateEvent" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Crea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

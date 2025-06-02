@@ -1,0 +1,35 @@
+<div class="modal fade" id="shiftEditModal" tabindex="-1" aria-labelledby="shiftEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="shiftEditForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="shiftEditModalLabel">Modifica Turno</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <p>Cosa vuoi fare?</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="splitShiftCheckbox">
+            <label class="form-check-label" for="splitShiftCheckbox">Dividi Turno</label>
+          </div>
+          <div id="splitShiftForm" class="mt-3 d-none">
+            <!-- Form per il Principal Event -->
+            <h6>Evento Principale</h6>
+            <div id="principalEventForm">
+              <!-- Campi del form -->
+            </div>
+            <!-- Form per il Second Event -->
+            <h6 class="mt-4">Nuovo Evento</h6>
+            <div id="secondEventForm">
+              <!-- Campi del form -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salva</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
