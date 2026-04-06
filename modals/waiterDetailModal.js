@@ -1,9 +1,7 @@
-export function initWaiterDetailModal(waiterId) {
-  const token = localStorage.getItem("token");
+import { apiFetch, BASE_URL } from '../utils/utils.js';
 
-  fetch(`http://localhost:8080/api/v1/events/by-waiter/${waiterId}`, {
-    headers: { Authorization: "Bearer " + token }
-  })
+export function initWaiterDetailModal(waiterId) {
+  apiFetch(`${BASE_URL}/api/v1/events/by-waiter/${waiterId}`)
     .then(res => res.json())
     .then(data => {
       const table = new Tabulator("#waiterEventsTable", {

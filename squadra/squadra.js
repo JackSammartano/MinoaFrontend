@@ -1,20 +1,19 @@
 /* eslint-env browser */
+import { apiFetch, BASE_URL } from '../utils/utils.js';
+
 export function initSquadra() {
   /* ---------- token / redirect ---------- */
   const token = localStorage.getItem('token');
   if (!token) { window.location.href = '../login/login.html'; return; }
 
-  const BASE_URL = 'http://localhost:8080/api/v1/waiters';
+  const WAITERS_URL = `${BASE_URL}/api/v1/waiters`;
 
   /* ---------- Tabulator ---------- */
   function createWaiterTable(elementId, group) {
-    // distruggo la tabella precedente se esiste
     const old = Tabulator.findTable(`#${elementId}`)[0];
     if (old) old.destroy();
 
-    fetch(`${BASE_URL}?belongingGroup=${group}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    apiFetch(`${WAITERS_URL}?belongingGroup=${group}`)
       .then(r => r.json())
       .then(data => {
         new Tabulator(`#${elementId}`, {
@@ -83,7 +82,7 @@ export function initSquadra() {
 
   /* ---------- Edit / Delete / Detail ---------- */
   function openEditWaiterModal(id) {
-    fetch(`${BASE_URL}/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+    apiFetch(`${WAITERS_URL}/${id}`)
       .then(r => r.json())
       .then(waiter =>
         fetch('../modals/waiterModal.html').then(r => r.text()).then(html => {
@@ -91,18 +90,17 @@ export function initSquadra() {
           import('../modals/waiterModal.js').then(mod => {
             mod.initWaiterModal();
 
-            /* pre-riempi i campi */
-            document.getElementById('waiterName').value       = waiter.name;
-            document.getElementById('waiterSurname').value    = waiter.surname;
-            document.getElementById('waiterPhone').value      = waiter.telephoneNumber || '';
-            document.getElementById('waiterEmail').value      = waiter.email || '';
-            document.getElementById('waiterPosition').value   = waiter.positionOrder;
-            document.getElementById('waiterGroup').value      = waiter.belongingGroup;
-            document.getElementById('waiterLatest').checked   = waiter.latest;
-            document.getElementById('waiterUser').value       = waiter.username || '';
-            document.getElementById('waiterAccessLevel').value= waiter.accessLevel || '';
-            document.getElementById('waiterPass').value       = '';
-            document.getElementById('waiterPass').disabled    = true;
+            document.getElementById('waiterName').value        = waiter.name;
+            document.getElementById('waiterSurname').value     = waiter.surname;
+            document.getElementById('waiterPhone').value       = waiter.telephoneNumber || '';
+            document.getElementById('waiterEmail').value       = waiter.email || '';
+            document.getElementById('waiterPosition').value    = waiter.positionOrder;
+            document.getElementById('waiterGroup').value       = waiter.belongingGroup;
+            document.getElementById('waiterLatest').checked    = waiter.latest;
+            document.getElementById('waiterUser').value        = waiter.username || '';
+            document.getElementById('waiterAccessLevel').value = waiter.accessLevel || '';
+            document.getElementById('waiterPass').value        = '';
+            document.getElementById('waiterPass').disabled     = true;
 
             document.getElementById('waiterModalLabel').textContent = 'Modifica Cameriere';
             document.getElementById('waiterForm').dataset.editingId = id;
@@ -117,17 +115,15 @@ export function initSquadra() {
 
   function deleteWaiter(id) {
     if (!confirm('Sei sicuro di voler eliminare questo cameriere?')) return;
-    fetch(`${BASE_URL}/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(res => {
-      if (res.ok) {
-        alert('Cameriere eliminato');
-        initSquadra();                // ricarico le tabelle
-      } else {
-        alert('Errore durante l\'eliminazione del cameriere');
-      }
-    });
+    apiFetch(`${WAITERS_URL}/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.ok) {
+          alert('Cameriere eliminato');
+          initSquadra();
+        } else {
+          alert('Errore durante l\'eliminazione del cameriere');
+        }
+      });
   }
 
   function openWaiterDetailModal(id) {

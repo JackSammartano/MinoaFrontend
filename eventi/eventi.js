@@ -1,4 +1,5 @@
 /* eslint-env browser */
+import { apiFetch, BASE_URL } from '../utils/utils.js';
 import { openShiftEditModal } from '../modals/shiftEditModal.js';
 
 export function initEventi() {
@@ -6,14 +7,14 @@ export function initEventi() {
   const token = localStorage.getItem('token');
   if (!token) { window.location.href = '../login/login.html'; return; }
 
+  const EVENTS_URL = `${BASE_URL}/api/v1/events`;
+
   /* ---------- distruggi Tabulator precedente, se presente ---------- */
   const oldTable = Tabulator.findTable('#eventTable')[0];
   if (oldTable) oldTable.destroy();
 
   /* ---------- Tabella ---------- */
-  fetch('http://localhost:8080/api/v1/events', {
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  apiFetch(EVENTS_URL)
     .then(r => r.json())
     .then(data => {
       new Tabulator('#eventTable', {
@@ -72,14 +73,11 @@ export function initEventi() {
     const container = document.getElementById('eventDetails');
     container.innerHTML = '<p>Caricamento turno...</p>';
 
-    fetch(`http://localhost:8080/api/v1/events/${eventId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    apiFetch(`${EVENTS_URL}/${eventId}`)
       .then(r => r.json())
       .then(event =>
-        fetch(`http://localhost:8080/api/v1/events/${eventId}/waiters`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }).then(r => r.json())
+        apiFetch(`${EVENTS_URL}/${eventId}/waiters`)
+          .then(r => r.json())
           .then(waiters => ({ event, waiters })),
       )
       .then(({ event, waiters }) => {
@@ -115,24 +113,19 @@ export function initEventi() {
   /* ---------- CRUD evento ---------- */
   function deleteEvent(id) {
     if (!confirm('Sei sicuro di voler eliminare questo evento?')) return;
-    fetch(`http://localhost:8080/api/v1/events/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(res => {
-      if (res.ok) {
-        Tabulator.findTable('#eventTable')[0].deleteRow(id);
-        document.getElementById('eventDetails').innerHTML = '';
-      } else {
-        alert('Errore durante l\'eliminazione');
-      }
-    });
+    apiFetch(`${EVENTS_URL}/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.ok) {
+          Tabulator.findTable('#eventTable')[0].deleteRow(id);
+          document.getElementById('eventDetails').innerHTML = '';
+        } else {
+          alert('Errore durante l\'eliminazione');
+        }
+      });
   }
 
   window.createShift = function (eventId) {
-    fetch(`http://localhost:8080/api/v1/events/workshift/${eventId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    apiFetch(`${EVENTS_URL}/workshift/${eventId}`, { method: 'POST' })
       .then(r => r.json().then(data => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         alert(data.message || (ok ? 'Turno creato con successo' : 'Errore nella creazione del turno'));
@@ -145,9 +138,7 @@ export function initEventi() {
   };
 
   function openEditModal(eventId) {
-    fetch(`http://localhost:8080/api/v1/events/${eventId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    apiFetch(`${EVENTS_URL}/${eventId}`)
       .then(r => r.json())
       .then(event => {
         document.getElementById('eventName').value           = event.name;
@@ -158,8 +149,7 @@ export function initEventi() {
         document.getElementById('eventLocation').value       = event.eventLocation;
         document.getElementById('eventType').disabled        = true;
         document.getElementById('diners').disabled           = true;
-        document.getElementById('createEventModalLabel').textContent =
-          'Modifica Evento';
+        document.getElementById('createEventModalLabel').textContent = 'Modifica Evento';
         document.querySelector('#createEventForm button[type="submit"]').textContent = 'Salva';
         document.getElementById('createEventForm').dataset.editingId = event.id;
         new bootstrap.Modal('#createEventModal').show();

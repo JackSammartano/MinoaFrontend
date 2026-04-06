@@ -1,3 +1,5 @@
+import { apiFetch, BASE_URL } from '../utils/utils.js';
+
 export function initWaiterModal() {
   const form = document.getElementById("waiterForm");
   const cancelBtn = document.getElementById("cancelWaiter");
@@ -12,12 +14,11 @@ export function initWaiterModal() {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
     const editingId = this.dataset.editingId;
     const method = editingId ? "PUT" : "POST";
     const url = editingId
-      ? `http://localhost:8080/api/v1/waiters/${editingId}`
-      : "http://localhost:8080/api/v1/waiters";
+      ? `${BASE_URL}/api/v1/waiters/${editingId}`
+      : `${BASE_URL}/api/v1/waiters`;
 
 const body = {
   name: document.getElementById("waiterName").value,
@@ -33,12 +34,9 @@ const body = {
   
 };
 
-    fetch(url, {
+    apiFetch(url, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
     })
       .then(res => {

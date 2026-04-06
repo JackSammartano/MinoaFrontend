@@ -1,3 +1,5 @@
+import { apiFetch, BASE_URL } from '../utils/utils.js';
+
 // Funzione centralizzata per il reset completo del form
 function resetEventForm() {
   const form = document.getElementById("createEventForm");
@@ -14,12 +16,11 @@ function resetEventForm() {
 document.getElementById("createEventForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const token = localStorage.getItem("token");
   const editingId = this.dataset.editingId;
   const method = editingId ? "PUT" : "POST";
   const url = editingId
-    ? `http://localhost:8080/api/v1/events/${editingId}`
-    : "http://localhost:8080/api/v1/events";
+    ? `${BASE_URL}/api/v1/events/${editingId}`
+    : `${BASE_URL}/api/v1/events`;
 
   const body = {
     name: document.getElementById("eventName").value,
@@ -30,12 +31,9 @@ document.getElementById("createEventForm").addEventListener("submit", function (
     eventLocation: document.getElementById("eventLocation").value
   };
 
-  fetch(url, {
+  apiFetch(url, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   })
     .then(res => {
