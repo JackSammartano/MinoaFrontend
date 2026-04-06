@@ -1,12 +1,11 @@
 // modals/modificaUltimoModal.js
-import { populateWaiterSelect } from "../utils/utils.js";
+import { apiFetch, populateWaiterSelect, BASE_URL } from "../utils/utils.js";
 
 export function initModificaUltimoModal() {
   const modalEl = document.getElementById("modificaUltimoModal");
   if (!modalEl) return;
 
-  const token = localStorage.getItem("token");
-  const triggerButton = document.getElementById("btn-modifica-ultimi"); // <== questo è il bottone da rifocalizzare
+  const triggerButton = document.getElementById("btn-modifica-ultimi");
 
 
   const groupSelectIds = {
@@ -21,7 +20,7 @@ export function initModificaUltimoModal() {
   modalEl.addEventListener("shown.bs.modal", () => {
     // A questo punto è sicuro popolare e mettere il focus
     Object.entries(groupSelectIds).forEach(([group, id]) => {
-      populateWaiterSelect(id, group, token);
+      populateWaiterSelect(id, group);
     });
 
     // Listener dei bottoni
@@ -31,12 +30,9 @@ export function initModificaUltimoModal() {
         return { id: parseInt(select.value) };
       });
 
-      fetch("http://localhost:8080/api/v1/waiters", {
+      apiFetch(`${BASE_URL}/api/v1/waiters`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedWaiters)
       }).then(res => {
         if (res.ok) {

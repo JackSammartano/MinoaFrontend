@@ -1,4 +1,6 @@
 /* eslint-env browser */
+import { apiFetch, BASE_URL } from '../utils/utils.js';
+
 export function openShiftEditModal(eventId) {
   const token = localStorage.getItem('token');
   if (!token) return;
@@ -19,12 +21,8 @@ export function openShiftEditModal(eventId) {
 
   /* ── carico dati evento + camerieri ──────────────────── */
   Promise.all([
-    fetch(`http://localhost:8080/api/v1/events/${eventId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(r => r.json()),
-    fetch(`http://localhost:8080/api/v1/events/${eventId}/waiters`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(r => r.json()),
+    apiFetch(`${BASE_URL}/api/v1/events/${eventId}`).then(r => r.json()),
+    apiFetch(`${BASE_URL}/api/v1/events/${eventId}/waiters`).then(r => r.json()),
   ])
   .then(([event, waiters]) => {
     principalFrm.innerHTML = renderEventForm(event,  waiters, 'principal');
@@ -54,12 +52,9 @@ export function openShiftEditModal(eventId) {
       waitersForSecondEvent:    extractWaiters('second'),
     };
 
-    fetch('http://localhost:8080/api/v1/events/split', {
+    apiFetch(`${BASE_URL}/api/v1/events/split`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
     .then(r => { if (!r.ok) throw new Error('Errore durante la divisione del turno.'); })
