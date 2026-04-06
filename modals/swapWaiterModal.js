@@ -1,4 +1,4 @@
-import { apiFetch, BASE_URL } from '../utils/utils.js';
+import { apiFetch, BASE_URL, withLoading } from '../utils/utils.js';
 
 /**
  * Apre il modale di sostituzione cameriere.
@@ -62,26 +62,26 @@ export async function openSwapWaiterModal(eventId, givingId, givingLabel, onSucc
       return;
     }
 
-    newBtn.disabled = true;
     errorBox.classList.add('d-none');
 
-    apiFetch(`${BASE_URL}/api/v1/events/${eventId}/swap`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ givingWaiterId: givingId, receivingWaiterId: receivingId }),
-    })
-    .then(r => {
-      if (!r.ok) return r.json().then(err => { throw new Error(err.message || 'Errore durante la sostituzione.'); });
-      return r.json();
-    })
-    .then(data => {
-      modal.hide();
-      if (typeof onSuccess === 'function') onSuccess(data.message);
-    })
-    .catch(err => {
-      errorBox.textContent = err.message;
-      errorBox.classList.remove('d-none');
-      newBtn.disabled = false;
-    });
+    withLoading(newBtn, () =>
+      apiFetch(`${BASE_URL}/api/v1/events/${eventId}/swap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ givingWaiterId: givingId, receivingWaiterId: receivingId }),
+      })
+      .then(r => {
+        if (!r.ok) return r.json().then(err => { throw new Error(err.message || 'Errore durante la sostituzione.'); });
+        return r.json();
+      })
+      .then(data => {
+        modal.hide();
+        if (typeof onSuccess === 'function') onSuccess(data.message);
+      })
+      .catch(err => {
+        errorBox.textContent = err.message;
+        errorBox.classList.remove('d-none');
+      })
+    );
   });
 }

@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { apiFetch, BASE_URL } from '../utils/utils.js';
+import { apiFetch, BASE_URL, withLoading } from '../utils/utils.js';
 
 export function openShiftEditModal(eventId) {
   const token = localStorage.getItem('token');
@@ -41,22 +41,25 @@ export function openShiftEditModal(eventId) {
   /* ── submit ──────────────────────────────────────────── */
   form.onsubmit = e => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
 
     /* ── caso senza split: salva modifiche evento principale ── */
     if (!splitChk.checked) {
       const updated = extractEventData('principal');
-      apiFetch(`${BASE_URL}/api/v1/events/${eventId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated),
-      }).then(r => {
-        if (r.ok) {
-          modal.hide();
-          if (typeof loadEventi === 'function') loadEventi();
-        } else {
-          alert('Errore durante la modifica dell\'evento.');
-        }
-      });
+      withLoading(submitBtn, () =>
+        apiFetch(`${BASE_URL}/api/v1/events/${eventId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated),
+        }).then(r => {
+          if (r.ok) {
+            modal.hide();
+            if (typeof loadEventi === 'function') loadEventi();
+          } else {
+            alert('Errore durante la modifica dell\'evento.');
+          }
+        })
+      );
       return;
     }
 
@@ -82,19 +85,21 @@ export function openShiftEditModal(eventId) {
       waitersForSecondEvent:    secondWaiters,
     };
 
-    apiFetch(`${BASE_URL}/api/v1/events/split`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    .then(r => {
-      if (!r.ok) throw new Error('Errore durante la divisione del turno.');
-    })
-    .then(() => {
-      modal.hide();
-      if (typeof loadEventi === 'function') loadEventi();
-    })
-    .catch(err => alert(err.message));
+    withLoading(submitBtn, () =>
+      apiFetch(`${BASE_URL}/api/v1/events/split`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      .then(r => {
+        if (!r.ok) throw new Error('Errore durante la divisione del turno.');
+      })
+      .then(() => {
+        modal.hide();
+        if (typeof loadEventi === 'function') loadEventi();
+      })
+      .catch(err => alert(err.message))
+    );
   };
 }
 

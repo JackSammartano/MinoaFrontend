@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { apiFetch, BASE_URL } from '../utils/utils.js';
+import { apiFetch, BASE_URL, withLoading } from '../utils/utils.js';
 import { openShiftEditModal } from '../modals/shiftEditModal.js';
 import { openSwapWaiterModal } from '../modals/swapWaiterModal.js';
 
@@ -192,7 +192,8 @@ export function initEventi() {
   }
 
   window.createShift = function (eventId) {
-    apiFetch(`${EVENTS_URL}/workshift/${eventId}`, { method: 'POST' })
+    const btn = document.querySelector(`button[onclick="createShift(${eventId})"]`);
+    const run = () => apiFetch(`${EVENTS_URL}/workshift/${eventId}`, { method: 'POST' })
       .then(r => r.json().then(data => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         alert(data.message || (ok ? 'Turno creato con successo' : 'Errore nella creazione del turno'));
@@ -202,6 +203,9 @@ export function initEventi() {
         document.getElementById('eventDetails')
           .innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
       });
+
+    if (btn) withLoading(btn, run);
+    else run();
   };
 
   function openEditModal(eventId) {
