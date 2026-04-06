@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { apiFetch, BASE_URL } from '../utils/utils.js';
+import { apiFetch, BASE_URL, withLoading } from '../utils/utils.js';
 import { openShiftEditModal } from '../modals/shiftEditModal.js';
 import { openSwapWaiterModal } from '../modals/swapWaiterModal.js';
 
@@ -59,8 +59,51 @@ export function initEventi() {
           { title: 'Tipo Pasto',  field: 'mealType' },
           { title: 'Location',    field: 'eventLocation' },
         ],
+        tableBuilt() { setupFilters(this); },
       });
     });
+
+  /* ---------- filtri ---------- */
+  function applyFilters(table) {
+    const type     = document.getElementById('filterEventType').value;
+    const location = document.getElementById('filterLocation').value;
+    const month    = document.getElementById('filterMonth').value;
+    const year     = document.getElementById('filterYear').value;
+
+    const filters = [];
+    if (type)     filters.push({ field: 'eventstype',    type: '=', value: type });
+    if (location) filters.push({ field: 'eventLocation', type: '=', value: location });
+    if (month || year) {
+      filters.push(row => {
+        const d = new Date(row.date);
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yy = String(d.getFullYear());
+        if (month && mm !== month) return false;
+        if (year  && yy !== year)  return false;
+        return true;
+      });
+    }
+
+    table.clearFilter();
+    filters.forEach(f => {
+      if (typeof f === 'function') table.addFilter(f);
+      else table.addFilter(f.field, f.type, f.value);
+    });
+  }
+
+  function setupFilters(table) {
+    ['filterEventType', 'filterLocation', 'filterMonth', 'filterYear']
+      .forEach(id => document.getElementById(id)
+        ?.addEventListener('change', () => applyFilters(table)));
+
+    document.getElementById('btnClearFilters')?.addEventListener('click', () => {
+      document.getElementById('filterEventType').value = '';
+      document.getElementById('filterLocation').value  = '';
+      document.getElementById('filterMonth').value     = '';
+      document.getElementById('filterYear').value      = '';
+      table.clearFilter();
+    });
+  }
 
   /* ---------- helper ---------- */
   function dateFormatter(cell) {
@@ -149,7 +192,8 @@ export function initEventi() {
   }
 
   window.createShift = function (eventId) {
-    apiFetch(`${EVENTS_URL}/workshift/${eventId}`, { method: 'POST' })
+    const btn = document.querySelector(`button[onclick="createShift(${eventId})"]`);
+    const run = () => apiFetch(`${EVENTS_URL}/workshift/${eventId}`, { method: 'POST' })
       .then(r => r.json().then(data => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
         alert(data.message || (ok ? 'Turno creato con successo' : 'Errore nella creazione del turno'));
@@ -159,6 +203,9 @@ export function initEventi() {
         document.getElementById('eventDetails')
           .innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
       });
+
+    if (btn) withLoading(btn, run);
+    else run();
   };
 
   function openEditModal(eventId) {

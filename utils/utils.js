@@ -32,6 +32,27 @@ export async function apiFetch(url, options = {}) {
   return response;
 }
 
+/**
+ * Disabilita un pulsante e mostra uno spinner mentre asyncFn è in esecuzione.
+ * Ripristina lo stato originale al termine, sia in caso di successo che di errore.
+ *
+ * @param {HTMLButtonElement} button  - Il pulsante da disabilitare
+ * @param {Function}          asyncFn - Funzione asincrona da eseguire
+ */
+export async function withLoading(button, asyncFn) {
+  const originalHtml = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML =
+    `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>` +
+    originalHtml;
+  try {
+    await asyncFn();
+  } finally {
+    button.disabled = false;
+    button.innerHTML = originalHtml;
+  }
+}
+
 export function populateWaiterSelect(selectId, belongingGroup) {
   return apiFetch(`${BASE_URL}/api/v1/waiters?belongingGroup=${belongingGroup}`)
     .then(res => res.json())
