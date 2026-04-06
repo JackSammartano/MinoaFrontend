@@ -21,8 +21,11 @@ export async function apiFetch(url, options = {}) {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     window.location.href = '../login/login.html';
-    // Restituisce una Promise che non si risolve mai:
-    // il redirect sopra prende il controllo, nessun .then() successivo viene eseguito
+    return new Promise(() => {});
+  }
+
+  if (response.status === 403) {
+    alert('Non hai i permessi per eseguire questa operazione.');
     return new Promise(() => {});
   }
 

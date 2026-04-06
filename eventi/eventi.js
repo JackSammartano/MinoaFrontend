@@ -1,6 +1,7 @@
 /* eslint-env browser */
 import { apiFetch, BASE_URL } from '../utils/utils.js';
 import { openShiftEditModal } from '../modals/shiftEditModal.js';
+import { openSwapWaiterModal } from '../modals/swapWaiterModal.js';
 
 export function initEventi() {
   /* ---------- token / redirect ---------- */
@@ -98,8 +99,31 @@ export function initEventi() {
             <div class="alert alert-warning">Nessun turno per questo evento</div>
             <button class="btn btn-primary mt-2" onclick="createShift(${event.id})">Crea Turno</button>`;
         } else {
-          const li = waiters.map(w => `<li class="list-group-item">${w.name} ${w.surname}</li>`).join('');
+          const li = waiters.map(w => `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>${w.name} ${w.surname}</span>
+              <button class="btn btn-sm btn-outline-warning swap-btn"
+                      data-id="${w.id}"
+                      data-name="${w.name} ${w.surname}"
+                      title="Sostituisci">
+                <i class="bi bi-arrow-left-right"></i>
+              </button>
+            </li>`).join('');
           container.innerHTML = `${header}<ul class="list-group">${li}</ul>`;
+
+          container.querySelectorAll('.swap-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              openSwapWaiterModal(
+                event.id,
+                parseInt(btn.dataset.id),
+                btn.dataset.name,
+                (msg) => {
+                  alert(msg);
+                  showWaiters(event.id);
+                }
+              );
+            });
+          });
         }
 
         const btn = document.getElementById(`btn-edit-shift-${event.id}`);

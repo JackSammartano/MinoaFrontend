@@ -28,7 +28,6 @@ export function openShiftEditModal(eventId) {
     principalFrm.innerHTML = renderEventForm(event,  waiters, 'principal');
     secondFrm.innerHTML    = renderEventForm(null,   waiters, 'second');
 
-    /* attivo la logica di selezione camerieri */
     setupWaiterSelector('principal');
     setupWaiterSelector('second');
 
@@ -42,14 +41,45 @@ export function openShiftEditModal(eventId) {
   /* ── submit ──────────────────────────────────────────── */
   form.onsubmit = e => {
     e.preventDefault();
-    if (!splitChk.checked) { modal.hide(); return; }
+
+    /* ── caso senza split: salva modifiche evento principale ── */
+    if (!splitChk.checked) {
+      const updated = extractEventData('principal');
+      apiFetch(`${BASE_URL}/api/v1/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated),
+      }).then(r => {
+        if (r.ok) {
+          modal.hide();
+          if (typeof loadEventi === 'function') loadEventi();
+        } else {
+          alert('Errore durante la modifica dell\'evento.');
+        }
+      });
+      return;
+    }
+
+    /* ── caso split: validazione ────────────────────────── */
+    const principalWaiters = extractWaiters('principal');
+    const secondWaiters    = extractWaiters('second');
+    const secondDate       = document.getElementById('secondDate')?.value;
+
+    if (principalWaiters.length === 0) {
+      alert('Assegnare almeno un cameriere all\'evento principale.');
+      return;
+    }
+    if (!secondDate) {
+      alert('Inserire la data per il secondo evento.');
+      return;
+    }
 
     const body = {
       principalEventId: eventId,
       principalEvent:   extractEventData('principal'),
       secondEvent:      extractEventData('second'),
-      waitersForPrincipalEvent: extractWaiters('principal'),
-      waitersForSecondEvent:    extractWaiters('second'),
+      waitersForPrincipalEvent: principalWaiters,
+      waitersForSecondEvent:    secondWaiters,
     };
 
     apiFetch(`${BASE_URL}/api/v1/events/split`, {
@@ -57,14 +87,19 @@ export function openShiftEditModal(eventId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
-    .then(r => { if (!r.ok) throw new Error('Errore durante la divisione del turno.'); })
-    .then(() => { modal.hide(); location.reload(); })
+    .then(r => {
+      if (!r.ok) throw new Error('Errore durante la divisione del turno.');
+    })
+    .then(() => {
+      modal.hide();
+      if (typeof loadEventi === 'function') loadEventi();
+    })
     .catch(err => alert(err.message));
   };
 }
 
 /* ------------------------------------------------------------------
-   1. HTML dei form evento
+   HTML dei form evento
 ------------------------------------------------------------------ */
 function renderEventForm(event, waiters, p) {
   const opt = waiters
@@ -80,33 +115,32 @@ function renderEventForm(event, waiters, p) {
       <label class="form-label" for="${p}Date">Data</label>
       <input type="date" class="form-control" id="${p}Date" value="${event?.date ?? ''}" />
     </div>
-<div class="mb-3">
-  <label class="form-label" for="${p}MealType">Fascia oraria</label>
-  <select class="form-select" id="${p}MealType">
-    <option value="MATTINA" ${event?.mealType === 'MATTINA' ? 'selected' : ''}>Mattina</option>
-    <option value="SERA"    ${event?.mealType === 'SERA'    ? 'selected' : ''}>Sera</option>
-  </select>
-</div>
-<div class="mb-3">
-  <label class="form-label" for="${p}EventLocation">Location</label>
-  <select class="form-select" id="${p}EventLocation">
-    <option value="MINOA"    ${event?.eventLocation === 'MINOA'    ? 'selected' : ''}>Minoa</option>
-    <option value="COLORADO" ${event?.eventLocation === 'COLORADO' ? 'selected' : ''}>Colorado</option>
-    <option value="CATERING" ${event?.eventLocation === 'CATERING' ? 'selected' : ''}>Catering</option>
-  </select>
-</div>
-<div class="mb-3">
-  <label class="form-label" for="${p}EventType">Tipo Evento</label>
-  <select class="form-select" id="${p}EventType">
-    <option value="MATRIMONIO" ${event?.eventstype === 'MATRIMONIO' ? 'selected' : ''}>Matrimonio</option>
-    <option value="BANCHETTO"  ${event?.eventstype === 'BANCHETTO'  ? 'selected' : ''}>Banchetto</option>
-  </select>
-</div>
+    <div class="mb-3">
+      <label class="form-label" for="${p}MealType">Fascia oraria</label>
+      <select class="form-select" id="${p}MealType">
+        <option value="MATTINA" ${event?.mealType === 'MATTINA' ? 'selected' : ''}>Mattina</option>
+        <option value="SERA"    ${event?.mealType === 'SERA'    ? 'selected' : ''}>Sera</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="${p}EventLocation">Location</label>
+      <select class="form-select" id="${p}EventLocation">
+        <option value="MINOA"    ${event?.eventLocation === 'MINOA'    ? 'selected' : ''}>Minoa</option>
+        <option value="COLORADO" ${event?.eventLocation === 'COLORADO' ? 'selected' : ''}>Colorado</option>
+        <option value="CATERING" ${event?.eventLocation === 'CATERING' ? 'selected' : ''}>Catering</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="${p}EventType">Tipo Evento</label>
+      <select class="form-select" id="${p}EventType">
+        <option value="MATRIMONIO" ${event?.eventstype === 'MATRIMONIO' ? 'selected' : ''}>Matrimonio</option>
+        <option value="BANCHETTO"  ${event?.eventstype === 'BANCHETTO'  ? 'selected' : ''}>Banchetto</option>
+      </select>
+    </div>
     <div class="mb-3">
       <label class="form-label" for="${p}Diners">Coperti</label>
       <input type="number" class="form-control" id="${p}Diners" value="${event?.diners ?? ''}" />
     </div>
-    <!-- NUOVA UX CAMERIERI -->
     <div class="mb-3">
       <label class="form-label" for="${p}WaiterSelect">Camerieri disponibili</label>
       <select class="form-select waiter-select" id="${p}WaiterSelect">
@@ -119,67 +153,60 @@ function renderEventForm(event, waiters, p) {
 }
 
 /* ------------------------------------------------------------------
-   Gestione condivisa delle due tendine “camerieri disponibili”
+   Gestione selezione camerieri
+   Usa data-value="Nome|Cognome" per evitare problemi con nomi composti
 ------------------------------------------------------------------ */
 function setupWaiterSelector(prefix) {
-  const select   = document.getElementById(`${prefix}WaiterSelect`);
-  const list     = document.getElementById(`${prefix}SelectedWaiters`);
-  const selects  = document.querySelectorAll('.waiter-select');      // ← entrambe
+  const select  = document.getElementById(`${prefix}WaiterSelect`);
+  const list    = document.getElementById(`${prefix}SelectedWaiters`);
+  const selects = document.querySelectorAll('.waiter-select');
 
-select.onchange = () => {
-  const val = select.value;
-  if (!val) return;                                // "-- seleziona --"
+  select.onchange = () => {
+    const val = select.value;
+    if (!val) return;
 
-  /* ------------------ SELEZIONA TUTTI ------------------ */
-  if (val === '__ALL__') {
-    // raccolgo tutte le opzioni “normali” ancora presenti
-    const remaining = Array.from(select.options)
-      .filter(o => o.value && o.value !== '__ALL__')
-      .map(o => o.value);
+    if (val === '__ALL__') {
+      Array.from(select.options)
+        .filter(o => o.value && o.value !== '__ALL__')
+        .map(o => o.value)
+        .forEach(v => addWaiter(v));
+      return;
+    }
 
-    remaining.forEach(v => addWaiter(v));          // le aggiungo tutte
-    return;
-  }
-
-  /* ------------------ SELEZIONE SINGOLA ---------------- */
-  addWaiter(val);
-};
-
-/* helper interno: aggiunge un cameriere e sincronizza le tendine */
-function addWaiter(value) {
-  const [name, surname] = value.split('|');
-
-  /* 1. rimuovo l’opzione da entrambe le tendine */
-  selects.forEach(s => s.querySelector(`option[value="${value}"]`)?.remove());
-
-  /* 2. creo il badge */
-  const li = document.createElement('li');
-  li.className =
-    'list-group-item d-flex justify-content-between align-items-center';
-  li.textContent = `${name} ${surname}`;
-
-  const btn = document.createElement('button');
-  btn.className = 'btn btn-sm btn-outline-danger';
-  btn.innerHTML = '<i class="bi bi-x"></i>';
-  btn.onclick = () => {
-    // rimetto l’opzione in fondo a entrambe le tendine
-    selects.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = `${name} ${surname}`;
-      s.appendChild(opt);
-    });
-    li.remove();
+    addWaiter(val);
   };
 
-  li.appendChild(btn);
-  list.appendChild(li);
-};
+  function addWaiter(value) {
+    const [name, surname] = value.split('|');
 
+    /* rimuovo l'opzione da entrambe le tendine */
+    selects.forEach(s => s.querySelector(`option[value="${value}"]`)?.remove());
+
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+    li.textContent = `${name} ${surname}`;
+    li.dataset.value = value; // ← chiave del fix: preserva nome|cognome originale
+
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-sm btn-outline-danger';
+    btn.innerHTML = '<i class="bi bi-x"></i>';
+    btn.onclick = () => {
+      selects.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = `${name} ${surname}`;
+        s.appendChild(opt);
+      });
+      li.remove();
+    };
+
+    li.appendChild(btn);
+    list.appendChild(li);
+  }
 }
 
 /* ------------------------------------------------------------------
-   3. Estrattori dati per submit
+   Estrattori dati per submit
 ------------------------------------------------------------------ */
 function extractEventData(p) {
   return {
@@ -195,7 +222,7 @@ function extractEventData(p) {
 function extractWaiters(prefix) {
   return Array.from(document.querySelectorAll(`#${prefix}SelectedWaiters li`))
     .map(li => {
-      const [name, surname] = li.firstChild.textContent.split(' ');
+      const [name, surname] = li.dataset.value.split('|'); // legge da data-value, non dal testo
       return { name, surname };
     });
 }
