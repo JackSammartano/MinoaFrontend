@@ -60,26 +60,40 @@ export async function loadSquadra() {
 
 /* ---------- Eventi ---------- */
 export async function loadEventi() {
-  /* 1. HTML della pagina */
+  /* 1. HTML sezione */
   const html = await fetch('../eventi/eventi.html').then(r => r.text());
   document.getElementById('mainContent').innerHTML = html;
 
-  /* 2. Inietto le due modali (una sola volta) */
-  const [createHtml, splitHtml] = await Promise.all([
-    fetch('../modals/createEventModal.html').then(r => r.text()),
-    fetch('../modals/shiftEditModal.html').then(r => r.text()),
-  ]);
-  document.body.insertAdjacentHTML('beforeend', createHtml + splitHtml);
+  /* 2. Modali: create + split  -------------------------------------- */
+  let firstLoad = false;
+  if (!document.getElementById('createEventModal')) {
+    firstLoad = true;                                 // ← mi servirà dopo
+    const [createHtml, splitHtml] = await Promise.all([
+      fetch('../modals/createEventModal.html').then(r => r.text()),
+      fetch('../modals/shiftEditModal.html').then(r => r.text()),
+    ]);
+    document.body.insertAdjacentHTML('beforeend', createHtml + splitHtml);
+  }
 
-  /* 3. Script della modale split */
-  await import('../modals/shiftEditModal.js');
+  /* 3. Carico gli script delle modali solo la prima volta ------------ */
+  if (firstLoad) {
+    await import('../modals/createEventModal.js');    //  << NECESSARIO
+    await import('../modals/shiftEditModal.js');
+  }
 
-  /* 4. Logica JS della sezione */
+  /* 4. Listener “+ Aggiungi Evento” – registrato ad ogni click ------- */
+  document.getElementById('btn-add-event')
+          .addEventListener('click', () => {
+            if (typeof resetEventForm === 'function') resetEventForm();
+          });
+
+  /* 5. Logica Tabulator ecc. ---------------------------------------- */
   const mod = await import('../eventi/eventi.js');
   mod.initEventi();
 
   setActiveLink('Eventi');
 }
+
 
 /* ---------- link usati nel markup (onclick="…") ---------- */
 Object.assign(window, { loadDashboard, loadSquadra, loadEventi, logout });
