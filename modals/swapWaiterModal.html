@@ -1,0 +1,28 @@
+<div class="modal fade" id="swapWaiterModal" tabindex="-1" aria-labelledby="swapWaiterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="swapWaiterModalLabel">Sostituisci Cameriere</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">
+          Sostituire <strong id="swapGivingName"></strong>?
+        </p>
+        <div class="mb-3">
+          <label class="form-label" for="swapReceivingSelect">Seleziona sostituto</label>
+          <select class="form-select" id="swapReceivingSelect">
+            <option value="">-- seleziona cameriere --</option>
+          </select>
+        </div>
+        <div id="swapError" class="alert alert-danger d-none"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <button type="button" class="btn btn-warning" id="btnConfirmSwap">
+          <i class="bi bi-arrow-left-right"></i> Conferma sostituzione
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
