@@ -1,35 +1,40 @@
 <link rel="stylesheet" href="../css/tabulator.min.css">
 <link rel="stylesheet" href="../css/bootstrap-icons.min.css">
 <link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/minoa-theme.css">
 
-<!-- Pulsante -->
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Squadra - Camerieri</h1>
+<div class="page-head">
   <div>
-    <button id="btn-add-waiter" class="btn btn-success me-2">
-      <i class="bi bi-plus-lg"></i> Aggiungi Cameriere
-    </button>
-    <button id="btn-modifica-ultimi" class="btn btn-primary">
+    <h1>Squadra</h1>
+    <div class="page-sub">Camerieri organizzati per gruppo di turnazione.</div>
+  </div>
+  <div class="d-flex gap-2">
+    <button id="btn-modifica-ultimi" class="btn btn-outline-secondary">
       <i class="bi bi-pencil"></i> Ultimi a lavorare
+    </button>
+    <button id="btn-add-waiter" class="btn btn-accent">
+      <i class="bi bi-plus-lg"></i> Aggiungi cameriere
     </button>
   </div>
 </div>
 
-
-<!-- Tabelle -->
-<h2>Maschi</h2>
+<div class="d-flex align-items-baseline gap-3 mt-4 mb-2">
+  <h2 class="m-0">Maschi</h2>
+  <span class="muted tabular">Sala — turni primari</span>
+</div>
 <div id="table-male"></div>
 
-<h2>Femmine</h2>
+<div class="d-flex align-items-baseline gap-3 mt-4 mb-2">
+  <h2 class="m-0">Femmine</h2>
+  <span class="muted tabular">Sala — turni primari</span>
+</div>
 <div id="table-female"></div>
 
-<h2>Secondari</h2>
+<div class="d-flex align-items-baseline gap-3 mt-4 mb-2">
+  <h2 class="m-0">Secondari</h2>
+  <span class="muted tabular">Supporto e stagionali</span>
+</div>
 <div id="table-secondary"></div>
 
-<!-- Contenitore per la modale -->
 <div id="modificaUltimoContainer"></div>
 <div id="waiterModalContainer"></div>
-
-
-<!-- Script -->
-<script src="../modals/modificaUltimiModal.js"></script>

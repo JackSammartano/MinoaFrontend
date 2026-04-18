@@ -1,66 +1,66 @@
 <link rel="stylesheet" href="../css/tabulator.min.css" />
 <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
 <link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/minoa-theme.css" />
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Lista Eventi</h1>
-  <button id="btn-add-event"
-          class="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#createEventModal">
-    <i class="bi bi-plus-lg"></i> Aggiungi Evento
-  </button>
+<div class="page-head">
+  <div>
+    <h1>Eventi</h1>
+    <div class="page-sub">Gestisci matrimoni, banchetti e turni di sala.</div>
+  </div>
+  <div>
+    <button id="btn-add-event"
+            class="btn btn-accent"
+            data-bs-toggle="modal"
+            data-bs-target="#createEventModal">
+      <i class="bi bi-plus-lg"></i> Nuovo evento
+    </button>
+  </div>
 </div>
 
 <!-- Barra filtri -->
-<div class="row g-2 mb-3" id="eventFilters">
-  <div class="col-auto">
-    <select class="form-select form-select-sm" id="filterEventType">
-      <option value="">Tutti i tipi</option>
-      <option value="MATRIMONIO">Matrimonio</option>
-      <option value="BANCHETTO">Banchetto</option>
-    </select>
-  </div>
-  <div class="col-auto">
-    <select class="form-select form-select-sm" id="filterLocation">
-      <option value="">Tutte le sedi</option>
-      <option value="MINOA">Minoa</option>
-      <option value="COLORADO">Colorado</option>
-      <option value="CATERING">Catering</option>
-    </select>
-  </div>
-  <div class="col-auto">
-    <select class="form-select form-select-sm" id="filterMonth">
-      <option value="">Tutti i mesi</option>
-      <option value="01">Gennaio</option>
-      <option value="02">Febbraio</option>
-      <option value="03">Marzo</option>
-      <option value="04">Aprile</option>
-      <option value="05">Maggio</option>
-      <option value="06">Giugno</option>
-      <option value="07">Luglio</option>
-      <option value="08">Agosto</option>
-      <option value="09">Settembre</option>
-      <option value="10">Ottobre</option>
-      <option value="11">Novembre</option>
-      <option value="12">Dicembre</option>
-    </select>
-  </div>
-  <div class="col-auto">
-    <input type="number" class="form-control form-control-sm" id="filterYear"
-           placeholder="Anno" min="2020" max="2099" style="width:90px">
-  </div>
-  <div class="col-auto">
-    <button class="btn btn-sm btn-outline-secondary" id="btnClearFilters">
-      <i class="bi bi-x-circle"></i> Azzera
-    </button>
+<div class="card card-minoa mb-3" style="padding:14px">
+  <div class="row g-2 align-items-center" id="eventFilters">
+    <div class="col-auto">
+      <select class="form-select form-select-sm" id="filterEventType" style="width:140px">
+        <option value="">Tutti i tipi</option>
+        <option value="MATRIMONIO">Matrimonio</option>
+        <option value="BANCHETTO">Banchetto</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <select class="form-select form-select-sm" id="filterLocation" style="width:140px">
+        <option value="">Tutte le sedi</option>
+        <option value="MINOA">Minoa</option>
+        <option value="COLORADO">Colorado</option>
+        <option value="CATERING">Catering</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <select class="form-select form-select-sm" id="filterMonth" style="width:130px">
+        <option value="">Ogni mese</option>
+        <option value="01">Gennaio</option><option value="02">Febbraio</option>
+        <option value="03">Marzo</option><option value="04">Aprile</option>
+        <option value="05">Maggio</option><option value="06">Giugno</option>
+        <option value="07">Luglio</option><option value="08">Agosto</option>
+        <option value="09">Settembre</option><option value="10">Ottobre</option>
+        <option value="11">Novembre</option><option value="12">Dicembre</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <input type="number" class="form-control form-control-sm" id="filterYear"
+             placeholder="Anno" min="2020" max="2099" style="width:90px">
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-secondary btn-sm" id="btnClearFilters">
+        <i class="bi bi-x-circle"></i> Azzera
+      </button>
+    </div>
   </div>
 </div>
 
 <div id="eventTable"></div>
 <div id="eventDetails" class="mt-4"></div>
 
-<!-- Container placeholder per la modale Create (iniettata da home.js) -->
 <div id="createEventContainer"></div>
-<!-- Container placeholder per la modale Split (iniettata da home.js) -->
 <div id="shiftEditContainer"></div>

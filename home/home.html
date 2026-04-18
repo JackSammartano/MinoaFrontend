@@ -5,34 +5,29 @@
   <title>Home – Minoa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- CSS -->
   <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="../css/tabulator.min.css" />
-
-  <style>
-    body            { font-family: Arial, sans-serif; }
-    .sidebar        { width: 280px; height: 100vh; background-color: #f8f9fa; }
-    .nav-link.active{ background-color:#0d6efd!important; color:#fff!important; }
-    .user-icon      { width:40px; height:40px; background:#6c757d; border-radius:50%;
-                      color:#fff; display:flex; align-items:center; justify-content:center;
-                      font-weight:bold; cursor:pointer; }
-    .user-icon.dropdown-toggle::after { display:none!important; }
-  </style>
+  <link rel="stylesheet" href="../css/minoa-theme.css" />
 </head>
 <body>
 
 <div class="d-flex">
   <!-- Sidebar -->
-  <div class="flex-shrink-0 p-3 sidebar">
-    <div class="d-flex justify-content-between align-items-center mb-3 dropdown">
-      <span class="fs-4">Minoa</span>
+  <div class="sidebar flex-shrink-0">
+    <div class="brand dropdown d-flex justify-content-between align-items-center w-100">
+      <div class="d-flex align-items-center gap-2">
+        <div class="brand-mark">M</div>
+        <div class="brand-word">
+          Minoa
+          <small>Sala &amp; Eventi</small>
+        </div>
+      </div>
 
       <div id="userIcon"
-           class="user-icon dropdown-toggle"
+           class="user-icon dropdown-toggle rounded-circle d-flex align-items-center justify-content-center text-white"
            data-bs-toggle="dropdown"
-           aria-expanded="false"
-           aria-haspopup="true">
-      </div>
+           aria-expanded="false"></div>
 
       <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="userIcon">
         <li><a class="dropdown-item" href="#">Profilo</a></li>
@@ -41,31 +36,32 @@
       </ul>
     </div>
 
-    <hr />
-
+    <div class="nav-section">Gestione</div>
     <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item"><a href="#" class="nav-link link-dark" onclick="loadDashboard()">Dashboard</a></li>
-      <li><a href="#" class="nav-link link-dark" onclick="loadSquadra()">Squadra</a></li>
-      <li><a href="#" class="nav-link link-dark" onclick="loadEventi()">Eventi</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="loadDashboard()"><i class="bi bi-house icon"></i><span>Dashboard</span></a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="loadEventi()"><i class="bi bi-calendar-event icon"></i><span>Eventi</span></a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="loadSquadra()"><i class="bi bi-people icon"></i><span>Squadra</span></a></li>
     </ul>
-
-    <hr />
   </div>
 
   <!-- Main content -->
-  <div class="flex-grow-1 p-4">
-    <div id="mainContent">
-      <h1>Benvenuto!</h1>
-      <p>Questa è la tua area riservata.</p>
+  <div class="flex-grow-1" style="min-width:0">
+    <div class="topbar">
+      <div class="crumb"><span id="crumbPath">Minoa / <b>Dashboard</b></span></div>
+    </div>
+    <div id="mainContent" class="main-content">
+      <div class="page-head">
+        <div>
+          <h1>Benvenuto.</h1>
+          <div class="page-sub">Questa è la tua area riservata.</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- JS di terze parti -->
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/tabulator.min.js"></script>
-
-<!-- JS dell’app (module!) -->
 <script type="module" src="../home/home.js"></script>
 </body>
 </html>

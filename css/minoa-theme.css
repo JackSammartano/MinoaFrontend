@@ -1,0 +1,278 @@
+/* ==========================================================================
+   Minoa theme — warm editorial Italian
+   Override di Bootstrap + utility custom. Da includere DOPO bootstrap.min.css.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:         oklch(0.975 0.008 82);
+  --surface:    oklch(0.99 0.006 82);
+  --surface-2:  oklch(0.955 0.010 82);
+  --surface-3:  oklch(0.93 0.012 82);
+  --border:     oklch(0.88 0.012 70);
+  --border-soft:oklch(0.92 0.010 75);
+  --ink:        oklch(0.22 0.015 55);
+  --ink-2:      oklch(0.38 0.014 55);
+  --ink-3:      oklch(0.55 0.012 60);
+  --ink-4:      oklch(0.72 0.010 65);
+
+  --accent-terracotta: oklch(0.62 0.14 45);
+  --accent-saffron:    oklch(0.72 0.14 75);
+  --accent-olive:      oklch(0.62 0.14 120);
+  --accent-plum:       oklch(0.48 0.14 340);
+
+  --accent:      var(--accent-terracotta);
+  --accent-soft: oklch(0.94 0.035 45);
+  --accent-ink:  oklch(0.38 0.10 45);
+
+  --success: oklch(0.60 0.11 150);
+  --warning: oklch(0.72 0.13 75);
+  --danger:  oklch(0.58 0.17 28);
+
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-ui:      "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius:    10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.04);
+  --shadow:    0 4px 16px rgba(60, 40, 20, 0.06), 0 1px 2px rgba(60, 40, 20, 0.04);
+  --shadow-lg: 0 20px 60px rgba(60, 40, 20, 0.14), 0 2px 8px rgba(60, 40, 20, 0.06);
+
+  /* Override Bootstrap */
+  --bs-primary: var(--accent);
+  --bs-body-bg: var(--bg);
+  --bs-body-color: var(--ink);
+  --bs-border-color: var(--border);
+}
+
+[data-theme="dark"] {
+  --bg:         oklch(0.18 0.012 55);
+  --surface:    oklch(0.22 0.014 55);
+  --surface-2:  oklch(0.26 0.015 55);
+  --border:     oklch(0.32 0.016 55);
+  --border-soft:oklch(0.28 0.014 55);
+  --ink:        oklch(0.96 0.008 82);
+  --ink-2:      oklch(0.82 0.010 75);
+  --ink-3:      oklch(0.65 0.012 60);
+  --ink-4:      oklch(0.50 0.012 60);
+  --accent-soft: oklch(0.30 0.06 45);
+  --accent-ink:  oklch(0.80 0.10 45);
+}
+[data-accent="saffron"] { --accent: var(--accent-saffron); --accent-soft: oklch(0.96 0.04 75); --accent-ink: oklch(0.42 0.12 75); }
+[data-accent="olive"]   { --accent: var(--accent-olive);   --accent-soft: oklch(0.94 0.035 120); --accent-ink: oklch(0.35 0.10 120); }
+[data-accent="plum"]    { --accent: var(--accent-plum);    --accent-soft: oklch(0.93 0.04 340); --accent-ink: oklch(0.35 0.12 340); }
+
+/* ---------- base ---------- */
+body {
+  font-family: var(--font-ui) !important;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+h1 { font-size: 42px; line-height: 1.05; }
+h2 { font-size: 28px; line-height: 1.1; }
+h3 { font-size: 22px; }
+
+.font-display { font-family: var(--font-display); font-weight: 400; }
+.tabular { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+.muted { color: var(--ink-3); }
+
+::selection { background: var(--accent-soft); color: var(--accent-ink); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 2px solid var(--bg); }
+
+/* ---------- sidebar ---------- */
+.sidebar {
+  width: 256px !important; height: 100vh;
+  background: var(--surface) !important;
+  border-right: 1px solid var(--border);
+  padding: 24px 16px !important;
+  display: flex; flex-direction: column;
+  position: sticky; top: 0;
+}
+.sidebar .brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 8px 20px; border-bottom: 1px solid var(--border-soft); margin-bottom: 16px;
+}
+.sidebar .brand-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--ink); color: var(--bg);
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 22px; font-style: italic;
+}
+.sidebar .brand-word { font-family: var(--font-display); font-size: 22px; }
+.sidebar .brand-word small {
+  font-family: var(--font-ui); font-size: 10px;
+  color: var(--ink-3); letter-spacing: 0.12em;
+  text-transform: uppercase; display: block; margin-top: -4px;
+}
+.sidebar .nav-section {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-4); padding: 16px 10px 8px;
+}
+.sidebar .nav-link {
+  color: var(--ink-2) !important;
+  border-radius: 8px; padding: 9px 12px !important; font-weight: 500; font-size: 13.5px;
+  display: flex; align-items: center; gap: 10px;
+  transition: background .12s;
+}
+.sidebar .nav-link:hover { background: var(--surface-2); color: var(--ink) !important; }
+.sidebar .nav-link.active {
+  background: var(--accent-soft) !important;
+  color: var(--accent-ink) !important;
+}
+.sidebar .user-icon {
+  width: 32px !important; height: 32px !important;
+  background: var(--accent) !important;
+  font-weight: 600; font-size: 13px;
+}
+
+/* ---------- topbar / content ---------- */
+.topbar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 36px; border-bottom: 1px solid var(--border-soft);
+  background: color-mix(in oklch, var(--bg) 80%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 10;
+}
+.crumb { font-size: 12px; color: var(--ink-3); }
+.crumb b { color: var(--ink); font-weight: 500; }
+
+.main-content { padding: 32px 36px 80px; max-width: 1400px; }
+
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border-soft);
+}
+.page-head h1 { margin: 0; font-size: 46px; }
+.page-head .page-sub { color: var(--ink-3); font-size: 13.5px; margin-top: 8px; }
+
+/* ---------- buttons (Bootstrap overrides) ---------- */
+.btn { border-radius: 8px !important; font-weight: 500; font-size: 13px; padding: 8px 14px; transition: all .12s; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-primary, .btn-success {
+  background: var(--ink) !important; border-color: var(--ink) !important; color: var(--bg) !important;
+}
+.btn-primary:hover, .btn-success:hover { background: var(--ink-2) !important; border-color: var(--ink-2) !important; }
+.btn-accent, .btn-create {
+  background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important;
+}
+.btn-accent:hover, .btn-create:hover { filter: brightness(0.95); }
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-danger, .btn-outline-warning {
+  background: var(--surface); border: 1px solid var(--border); color: var(--ink-2);
+}
+.btn-outline-primary:hover   { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent); }
+.btn-outline-secondary:hover { background: var(--surface-2); color: var(--ink); border-color: var(--ink-4); }
+.btn-outline-danger { color: var(--danger) !important; }
+.btn-outline-danger:hover { background: color-mix(in oklch, var(--danger) 10%, var(--surface)); color: var(--danger) !important; border-color: var(--danger) !important; }
+
+/* ---------- forms ---------- */
+.form-control, .form-select {
+  border-radius: 8px !important; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink);
+  font-size: 13px; padding: 9px 12px;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.form-label, label.form-label {
+  font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500; margin-bottom: 6px;
+}
+
+/* ---------- cards ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg); box-shadow: none;
+}
+.card-minoa { padding: 20px; }
+
+/* ---------- modals ---------- */
+.modal-content { border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--bg); }
+.modal-header { border-bottom: 1px solid var(--border-soft); padding: 20px 24px; }
+.modal-title { font-family: var(--font-display); font-size: 24px; letter-spacing: -0.01em; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { border-top: 1px solid var(--border-soft); padding: 14px 24px; }
+.btn-close { opacity: .6; }
+
+/* ---------- Tabulator overrides ---------- */
+.tabulator {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
+}
+.tabulator .tabulator-header {
+  background: var(--surface-2) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+.tabulator .tabulator-col {
+  background: transparent !important; border-right: none !important;
+}
+.tabulator .tabulator-col-title {
+  font-size: 10.5px !important; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3) !important;
+  font-weight: 500 !important; padding: 12px 6px;
+}
+.tabulator .tabulator-row { background: var(--surface) !important; border-bottom: 1px solid var(--border-soft) !important; }
+.tabulator .tabulator-row:hover { background: var(--surface-2) !important; }
+.tabulator .tabulator-row .tabulator-cell { font-size: 13px; padding: 14px 12px; border-right: none; color: var(--ink); }
+.tabulator .tabulator-row.tabulator-selected { background: var(--accent-soft) !important; }
+
+/* ---------- chips/badges ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 500;
+  background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border-soft);
+}
+.chip.accent { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
+.chip.success { background: color-mix(in oklch, var(--success) 15%, var(--surface)); color: var(--success); border-color: transparent; }
+.chip.warning { background: color-mix(in oklch, var(--warning) 20%, var(--surface)); color: color-mix(in oklch, var(--warning) 70%, var(--ink)); border-color: transparent; }
+
+/* ---------- list-group (turni) ---------- */
+.list-group-item {
+  background: var(--surface-2); border: none; border-radius: 10px !important;
+  margin-bottom: 6px; padding: 12px 14px;
+}
+
+/* ---------- alert ---------- */
+.alert { border-radius: 10px; border: none; font-size: 13px; }
+.alert-warning { background: color-mix(in oklch, var(--warning) 18%, var(--surface)); color: color-mix(in oklch, var(--warning) 60%, var(--ink)); }
+.alert-danger  { background: color-mix(in oklch, var(--danger) 12%, var(--surface)); color: var(--danger); }
+
+/* ---------- stats grid (dashboard) ---------- */
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border-soft);
+  border: 1px solid var(--border-soft); border-radius: var(--radius-lg); overflow: hidden;
+}
+@media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--surface); padding: 22px 24px; }
+.stat-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.stat-value { font-family: var(--font-display); font-size: 54px; line-height: 1; margin-top: 14px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat-unit { font-family: var(--font-ui); font-size: 14px; color: var(--ink-3); margin-left: 6px; }
+.stat-trend { font-size: 12px; margin-top: 10px; color: var(--ink-3); }
+
+/* ---------- editorial quote ---------- */
+.editorial-quote {
+  font-family: var(--font-display); font-style: italic; font-size: 22px;
+  color: var(--ink-2); line-height: 1.4;
+}
+.editorial-quote::before { content: '“'; color: var(--accent); font-size: 1.4em; }
+.editorial-quote::after  { content: '”'; color: var(--accent); font-size: 1.4em; }
+
+/* ---------- responsive sidebar rail ---------- */
+@media (max-width: 1100px) {
+  .sidebar { width: 72px !important; padding: 20px 8px !important; }
+  .sidebar .nav-link span:not(.icon),
+  .sidebar .brand-word { display: none !important; }
+  .sidebar .nav-link { justify-content: center; padding: 9px 0 !important; }
+  .sidebar .nav-section { text-align: center; padding: 12px 0 6px; }
+}
