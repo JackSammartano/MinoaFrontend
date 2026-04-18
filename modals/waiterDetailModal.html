@@ -2,29 +2,58 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="waiterDetailModalLabel">Eventi del Cameriere</h5>
+        <h5 class="modal-title font-display" id="waiterDetailModalLabel">Dettaglio Cameriere</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-  <label for="filterMonth" class="form-label">Filtra per mese</label>
-  <select id="filterMonth" class="form-select">
-    <option value="">Tutti i mesi</option>
-    <option value="01">Gennaio</option>
-    <option value="02">Febbraio</option>
-    <option value="03">Marzo</option>
-    <option value="04">Aprile</option>
-    <option value="05">Maggio</option>
-    <option value="06">Giugno</option>
-    <option value="07">Luglio</option>
-    <option value="08">Agosto</option>
-    <option value="09">Settembre</option>
-    <option value="10">Ottobre</option>
-    <option value="11">Novembre</option>
-    <option value="12">Dicembre</option>
-  </select>
-</div>
-        <div id="waiterEventsTable"></div>
+
+        <ul class="nav nav-tabs mb-3" id="waiterDetailTabs">
+          <li class="nav-item">
+            <button class="nav-link active" data-tab="turni">Turni</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-tab="cambi">Cambi</button>
+          </li>
+        </ul>
+
+        <!-- TAB TURNI -->
+        <div id="tabTurni">
+          <div class="d-flex gap-3 align-items-end mb-3">
+            <div>
+              <label for="waiterDetailFilterMonth" class="form-label">Mese</label>
+              <select id="waiterDetailFilterMonth" class="form-select form-select-sm" style="width:160px">
+                <option value="">Tutti i mesi</option>
+                <option value="01">Gennaio</option>
+                <option value="02">Febbraio</option>
+                <option value="03">Marzo</option>
+                <option value="04">Aprile</option>
+                <option value="05">Maggio</option>
+                <option value="06">Giugno</option>
+                <option value="07">Luglio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Settembre</option>
+                <option value="10">Ottobre</option>
+                <option value="11">Novembre</option>
+                <option value="12">Dicembre</option>
+              </select>
+            </div>
+            <div>
+              <label for="waiterDetailFilterYear" class="form-label">Anno</label>
+              <input id="waiterDetailFilterYear" type="number" class="form-control form-control-sm" style="width:100px" min="2020" max="2099">
+            </div>
+          </div>
+          <div class="table-scroll-wrapper"><div id="waiterEventsTable"></div></div>
+        </div>
+
+        <!-- TAB CAMBI -->
+        <div id="tabCambi" style="display:none">
+          <p class="muted mb-3" style="font-size:13px">
+            <strong>DATO</strong> = hai lavorato al posto di qualcuno &nbsp;|&nbsp;
+            <strong>RICEVUTO</strong> = qualcuno ha lavorato al posto tuo
+          </p>
+          <div class="table-scroll-wrapper"><div id="waiterChangesTable"></div></div>
+        </div>
+
       </div>
     </div>
   </div>

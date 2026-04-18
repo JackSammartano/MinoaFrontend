@@ -20,6 +20,9 @@ export function initSquadra() {
           data,
           layout: 'fitColumns',
           autoResize: true,
+          pagination: 'local',
+          paginationSize: 10,
+          paginationButtonCount: 5,
           placeholder: 'Nessun cameriere trovato',
           columns: [
             {

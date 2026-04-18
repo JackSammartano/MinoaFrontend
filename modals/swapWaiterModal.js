@@ -24,26 +24,42 @@ export async function openSwapWaiterModal(eventId, givingId, givingLabel, onSucc
   errorBox.classList.add('d-none');
   errorBox.textContent = '';
 
-  /* ── popolo il dropdown con tutti i camerieri (escluso il cedente) ── */
+  /* ── popolo il dropdown: disponibili, ordinati per debito cambio ── */
   const select = document.getElementById('swapReceivingSelect');
   select.innerHTML = '<option value="">-- seleziona cameriere --</option>';
 
-  const groups = ['MALE', 'FEMALE', 'SECONDARY'];
-  const allWaiters = (await Promise.all(
-    groups.map(g =>
-      apiFetch(`${BASE_URL}/api/v1/waiters?belongingGroup=${g}`)
-        .then(r => r.json())
-    )
-  )).flat();
+  const [assignedWaiters, swapDebts] = await Promise.all([
+    apiFetch(`${BASE_URL}/api/v1/events/${eventId}/waiters`).then(r => r.json()),
+    apiFetch(`${BASE_URL}/api/v1/waiters/${givingId}/swap-debts`).then(r => r.json()),
+  ]);
 
-  allWaiters
-    .filter(w => w.id !== givingId)
-    .forEach(w => {
-      const opt = document.createElement('option');
-      opt.value = w.id;
-      opt.textContent = `${w.name} ${w.surname} (${w.belongingGroup})`;
-      select.appendChild(opt);
-    });
+  const assignedIds = new Set(assignedWaiters.map(w => w.id));
+
+  const available    = swapDebts.filter(w => !assignedIds.has(w.waiterId));
+  const inDebt       = available.filter(w => w.debt > 0);
+  const others       = available.filter(w => w.debt <= 0);
+
+  if (inDebt.length > 0) {
+    const grpDebt = document.createElement('optgroup');
+    grpDebt.label = 'In debito di cambio';
+    select.appendChild(grpDebt);
+    inDebt.forEach(w => { grpDebt.appendChild(createOpt(w, true)); });
+  }
+
+  const grpOthers = document.createElement('optgroup');
+  grpOthers.label = inDebt.length > 0 ? 'Altri disponibili' : 'Disponibili';
+  select.appendChild(grpOthers);
+  others.forEach(w => { grpOthers.appendChild(createOpt(w, false)); });
+
+  function createOpt(w, showDebt) {
+    const opt = document.createElement('option');
+    opt.value = w.waiterId;
+    const debtLabel = showDebt && w.debt > 0
+      ? ` — deve ${w.debt} cambio${w.debt > 1 ? 'i' : ''}`
+      : '';
+    opt.textContent = `${w.name} ${w.surname} (${w.belongingGroup})${debtLabel}`;
+    return opt;
+  }
 
   modal.show();
 
